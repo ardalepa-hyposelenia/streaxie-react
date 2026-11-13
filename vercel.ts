@@ -21,7 +21,7 @@ if (
 }
 
 const config: VercelConfig = {
-  bunVersion: "1.x",
+  bunVersion: "1.4.x",
   framework: "vite",
   installCommand: "bun install --frozen-lockfile",
   buildCommand: "bun run test && bun run build",

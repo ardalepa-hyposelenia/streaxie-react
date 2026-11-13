@@ -12,6 +12,8 @@ Bun 1.4.4+ is required; the package manager is pinned to 1.4.4. `bunfig.toml` se
 
 `bun.lock` is the frontend dependency lockfile. Use `bun add` / `bun add -d` to change dependencies, and `bun install --frozen-lockfile` for reproducible installs. Keep the existing Vite, React, TypeScript and Vitest toolchain; the migration changes the package manager and runtime.
 
+Vercel uses `bunVersion: "1.4.x"`. Its initial project Install Command is `bunx --bun bun@1.4.4 install --frozen-lockfile` so configuration compilation can bootstrap from older build images without changing the lockfile.
+
 ## Email delivery
 
 Gmail SMTP is the only delivery method. Follow [Gmail SMTP setup](https://github.com/ardalepa-hyposelenia/streaxie-go/blob/main/EMAIL.md): set `GMAIL_USER` and `GMAIL_APP_PASSWORD` in the backend's ignored `.env`, then restart the API. No credentials belong in the frontend. `WEB_ORIGIN` must match the site users open.

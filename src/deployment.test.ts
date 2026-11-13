@@ -32,6 +32,7 @@ it("keeps API rewrites before SPA fallback and only enables main deployments", a
   vi.stubEnv("VERCEL", "1");
   vi.stubEnv("BACKEND_ORIGIN", "https://api.streaxie.test");
   const config = (await import("../vercel")).default;
+  expect(config.bunVersion).toBe("1.4.x");
   expect(config.rewrites?.[0]).toMatchObject({
     source: "/api/:path*",
     destination: "https://api.streaxie.test/api/:path*",
