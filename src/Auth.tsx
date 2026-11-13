@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { api, json, setAccess } from "./api";
 import { Field, Notice } from "./components";
 import type { Profile } from "./types";
+import Turnstile, { turnstileEnabled } from "./Turnstile";
 export default function Auth({
   path,
   go,
@@ -14,6 +15,8 @@ export default function Auth({
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [message, setMessage] = useState("");
+  const [challenge, setChallenge] = useState(""),
+    [challengeKey, setChallengeKey] = useState(0);
   const [token] = useState(
     () => new URLSearchParams(location.hash.slice(1)).get("token") || "",
   );
@@ -38,10 +41,10 @@ export default function Auth({
     setMessage("");
     try {
       if (forgot) {
-        const r = await api<{ message: string }>(
-          "/auth/forgot-password",
-          json("POST", { email: f.get("email") }),
-        );
+        const r = await api<{ message: string }>("/auth/forgot-password", {
+          ...json("POST", { email: f.get("email") }),
+          headers: { "X-Turnstile-Token": challenge },
+        });
         setMessage(r.message);
       } else if (reset || verify) {
         await api(
@@ -60,7 +63,15 @@ export default function Auth({
       } else {
         const t = await api<{ access_token: string }>(
           "/auth/" + (register ? "register" : "login"),
-          json("POST", { email: f.get("email"), password: f.get("password") }),
+          {
+            ...json("POST", {
+              email: f.get("email"),
+              password: f.get("password"),
+            }),
+            ...(register
+              ? { headers: { "X-Turnstile-Token": challenge } }
+              : {}),
+          },
         );
         setAccess(t.access_token);
         const p = await api<Profile>("/auth/me");
@@ -74,6 +85,10 @@ export default function Auth({
       setError((e as Error).message);
     } finally {
       setBusy(false);
+      if (register || forgot) {
+        setChallenge("");
+        setChallengeKey((k) => k + 1);
+      }
     }
   }
   return (
@@ -140,11 +155,22 @@ export default function Auth({
             </Notice>
           )}
           {error && <Notice error>{error}</Notice>}
+          {(register || forgot) && !message && (
+            <Turnstile
+              key={challengeKey}
+              action={register ? "register" : "forgot"}
+              onToken={setChallenge}
+            />
+          )}
           {message && <Notice>{message}</Notice>}
           {!message && (
             <button
               className="primary w-full"
-              disabled={busy || ((verify || reset) && !token)}
+              disabled={
+                busy ||
+                ((verify || reset) && !token) ||
+                ((register || forgot) && turnstileEnabled && !challenge)
+              }
             >
               {busy
                 ? "Please wait…"

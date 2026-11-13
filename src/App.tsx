@@ -52,6 +52,7 @@ import {
   snapshot,
 } from "./storage";
 import type { Mutation, Profile, Snapshot } from "./types";
+import Turnstile, { turnstileEnabled } from "./Turnstile";
 const Insights = lazy(() => import("./Insights"));
 const SettingsPage = lazy(() => import("./Settings"));
 const AUTH_PATHS = [
@@ -63,6 +64,10 @@ const AUTH_PATHS = [
 ];
 
 export default function App() {
+  const [verificationOpen, setVerificationOpen] = useState(false),
+    [verificationToken, setVerificationToken] = useState(""),
+    [verificationAttempt, setVerificationAttempt] = useState(0),
+    [verificationSending, setVerificationSending] = useState(false);
   const [path, setPath] = useState(location.pathname),
     [linkVersion, setLinkVersion] = useState(0),
     [profile, setProfile] = useState<Profile>(),
@@ -261,15 +266,22 @@ export default function App() {
     void runSync();
   }
   async function resend() {
+    if (verificationSending) return;
+    setVerificationSending(true);
     setMessage("");
     try {
-      const r = await api<{ message: string }>(
-        "/auth/resend-verification",
-        json("POST", {}),
-      );
+      const r = await api<{ message: string }>("/auth/resend-verification", {
+        ...json("POST", {}),
+        headers: { "X-Turnstile-Token": verificationToken },
+      });
       setMessage(r.message);
+      setVerificationOpen(false);
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setVerificationSending(false);
+      setVerificationToken("");
+      setVerificationAttempt((n) => n + 1);
     }
   }
   const authPath = AUTH_PATHS.includes(path);
@@ -357,7 +369,9 @@ export default function App() {
             <button
               className="text-button"
               disabled={!online}
-              onClick={() => void resend()}
+              onClick={() =>
+                turnstileEnabled ? setVerificationOpen(true) : void resend()
+              }
             >
               Send verification link
             </button>
@@ -587,6 +601,28 @@ export default function App() {
               setNewHabit(false);
             }}
           />
+        </Dialog>
+      )}
+      {verificationOpen && (
+        <Dialog
+          title="Send verification email"
+          close={() => setVerificationOpen(false)}
+        >
+          <p className="muted mb-5">
+            Complete the security check to request a fresh verification link.
+          </p>
+          <Turnstile
+            key={verificationAttempt}
+            action="resend"
+            onToken={setVerificationToken}
+          />
+          <button
+            className="primary mt-5"
+            disabled={!verificationToken || !online || verificationSending}
+            onClick={() => void resend()}
+          >
+            Send verification email
+          </button>
         </Dialog>
       )}
       {signout && (

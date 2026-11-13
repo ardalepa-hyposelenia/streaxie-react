@@ -1,5 +1,13 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
+if (
+  process.env.VERCEL_ENV === "production" &&
+  !process.env.VITE_TURNSTILE_SITE_KEY
+) {
+  throw new Error(
+    "VITE_TURNSTILE_SITE_KEY is required for production deployment.",
+  );
+}
 const files = [
   "/",
   ...(await readdir("dist/assets")).map((x) => "/assets/" + x),

@@ -5,12 +5,12 @@ Validated locally with a fresh PostgreSQL cluster and database used only for the
 | Check | Result |
 | --- | --- |
 | `bun install --frozen-lockfile` | Passed with Bun 1.4.4 and migrated `bun.lock` |
-| `bun run test` | 11 tests passed across 3 files with Bun |
+| `bun run test` | 15 tests passed across 4 files with Bun |
 | `bun run build` | TypeScript check, Vite build, and offline shell generation passed with Bun |
 | `bun run format:check` | Passed |
-| `bun run test:e2e --list` | All 3 browser tests discovered under Bun |
+| Turnstile browser checks | 2 tests passed with a site-key build and intercepted provider script |
 | Bun/Vite browser smoke test | Landing, registration navigation, and responsive layout at 320/390/1440 pixels passed in Edge |
-| Full browser API flow | 3 tests passed after email fixture changes before Bun migration; full API browser suite not rerun for this tooling change |
+| Full browser API flow | 3 tests passed against an isolated Go API; 5 total including Turnstile checks |
 | `go test ./...` with `TEST_DATABASE_URL` | Passed, including PostgreSQL and HTTP integration tests |
 | `go vet ./...` | Passed |
 | `go build ./cmd/api` | Passed |
@@ -19,7 +19,9 @@ Browser coverage includes signup and timezone setup, binary and quantity check-i
 
 Unit coverage includes DST and rollover boundaries, scheduled timezone settings, streak reversal, queued previous-day streaks, replacement edits, account separation, retryable network failures, HTTP-successful sync rejection, interrupted pagination, and paused account queues.
 
-Gmail SMTP is the only application delivery method. Browser tests intercept delivery requests; Go tests use seeded tokens and an in-memory callback, while SMTP tests use a TLS test server. Gmail delivery itself requires configured credentials and has not been tested against the real service. No deployment, Git commit, or race-detector run was performed. Mobile checks used browser viewport emulation; physical phones were not tested. Paid features and the separate mobile app remain outside this implementation.
+Gmail SMTP is the only application delivery method. Browser tests intercept delivery requests; Go tests use seeded tokens and an in-memory callback, while SMTP tests use a TLS test server. Gmail delivery has not been tested against the real service. No race-detector run was performed. Mobile checks used browser viewport emulation; physical phones were not tested. Paid features and the separate mobile app remain outside this implementation.
+
+Deployment checks cover private middleware header replacement, required proxy configuration, API-before-SPA rewrites, main-only deployment rules, and rejection of unsafe backend origins. Browser checks cover renewal of single-use challenge tokens after failure and retry after a provider script fails. The backend suite includes concurrent one-time initial verification claims and a PostgreSQL rate limit shared across service instances. Vercel local build is blocked by Windows symlink permissions; the remote Linux build is the deployment check.
 
 The screenshots under `review/` show isolated test accounts and habits, not production user data.
 

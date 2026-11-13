@@ -1,0 +1,10 @@
+.env*
+.git/
+.vercel/
+node_modules/
+dist/
+docs/
+review/
+test-results/
+playwright-report/
+*.tsbuildinfo

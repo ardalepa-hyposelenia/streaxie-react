@@ -24,6 +24,8 @@ The API requires valid Gmail configuration at startup. Configure and test your s
 
 ## Production build and offline testing
 
+For the two-project Vercel deployment, follow the [production guide](https://github.com/ardalepa-hyposelenia/streaxie-go/blob/main/docs/DEPLOYMENT.md). Configure `BACKEND_ORIGIN` and private `PROXY_SHARED_SECRET` for middleware, and public `VITE_TURNSTILE_SITE_KEY` for browser challenges. See `.env.example`. Vercel builds require the site key; never prefix private secrets with `VITE_`. Local development can omit Turnstile keys.
+
 Run `bun run build`. From `backend`, set `WEB_DIST=../frontend/dist`, set `WEB_ORIGIN` to the actual site origin, then run the API. In production set `APP_ENV=production` and use an HTTPS origin; refresh cookies are Secure. Terminate HTTPS at the deployment's reverse proxy.
 
 The production build includes a service worker that caches only the public app shell and assets. Account data is stored separately in IndexedDB. API responses and email links are not cached by the service worker. Offline navigation works after the first successful online visit and service-worker installation. The Vite development server intentionally does not install the service worker.
