@@ -12,7 +12,7 @@ Bun 1.4.4+ is required; the package manager is pinned to 1.4.4. `bunfig.toml` se
 
 `bun.lock` is the frontend dependency lockfile. Use `bun add` / `bun add -d` to change dependencies, and `bun install --frozen-lockfile` for reproducible installs. Keep the existing Vite, React, TypeScript and Vitest toolchain; the migration changes the package manager and runtime.
 
-Vercel uses `bunVersion: "1.4.x"` and Install Command `bunx --bun bun@1.4.4 install --frozen-lockfile` to install with the pinned Bun release without changing the lockfile.
+Vercel uses `bunVersion: "1.4.x"` in static `vercel.json` so Bun 1.4 is selected before the frozen-lockfile install. Vercel manages patch releases within that version line; local development remains pinned to Bun 1.4.4.
 
 ## Email delivery
 
