@@ -6,6 +6,7 @@ This repository owns the frontend design and implementation documentation. Share
 - [Earlier wireframes](UI.md): historical reference; approved web decisions take precedence.
 - [Illustrative prototype](design-preview/README.md): standalone HTML/CSS/JavaScript with sample data.
 - [Frontend setup](../README.md).
+- [Panduan deploy dari nol](DEPLOYMENT-GUIDE.md): tutorial Indonesia untuk Vercel, routing API, Turnstile, environment, troubleshooting, dan bekerja dengan atau tanpa AI.
 - [Validation record](../VALIDATION.md).
 - [Implementation screenshots](../review/): isolated test-account data.
 

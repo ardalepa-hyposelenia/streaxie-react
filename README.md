@@ -1,5 +1,7 @@
 # Streaxie web
 
+Panduan belajar deployment dari nol tersedia di [Deploy frontend ke Vercel](docs/DEPLOYMENT-GUIDE.md), mencakup persiapan kedua repo, dashboard/CLI, proxy, Turnstile, pemeriksaan browser, serta troubleshooting.
+
 React + TypeScript + Vite, with the existing Go API. English UI, cream and terracotta, compact cards, and a current streak on every card. Insights and Settings load separately.
 
 ## Local development
