@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Streaxie — design preview</title>
+  <link rel="stylesheet" href="preview.css">
+  <script src="preview.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="preview-bar" aria-label="Design preview controls">
+    <div class="preview-label"><strong>Design preview</strong><span>Sample data · no account or server connection</span></div>
+    <nav class="preview-views" aria-label="Preview screens">
+      <button data-view="landing">Landing</button>
+      <button data-view="today" aria-pressed="true">Today</button>
+      <button data-view="onboarding">Onboarding</button>
+    </nav>
+    <div class="preview-states">
+      <button id="mobile-toggle" aria-pressed="false">Mobile</button>
+      <button id="offline-toggle" aria-pressed="false">Offline</button>
+      <button id="readonly-toggle" aria-pressed="false">Read-only</button>
+      <button id="empty-toggle" aria-pressed="false">Empty</button>
+      <button id="loading-toggle">Loading</button>
+      <button id="reset-preview">Reset</button>
+    </div>
+  </div>
+  <div id="canvas"><main id="main" tabindex="-1"></main></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="dialog" aria-labelledby="dialog-title">
+    <div class="dialog-head"><h2 id="dialog-title"></h2><button id="close-dialog" class="quiet" aria-label="Close dialog">Close</button></div>
+    <div id="dialog-body"></div>
+  </dialog>
+  <noscript><p>This interactive design preview needs JavaScript.</p></noscript>
+</body>
+</html>

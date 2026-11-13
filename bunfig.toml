@@ -1,0 +1,3 @@
+[run]
+# Run CLI tools with Bun even when their executable declares a Node shebang.
+bun = true
