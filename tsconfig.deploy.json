@@ -1,4 +1,4 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["middleware.ts", "vercel.ts"]
+  "include": ["middleware.ts"]
 }

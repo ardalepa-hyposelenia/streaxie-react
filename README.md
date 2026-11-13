@@ -12,7 +12,7 @@ Bun 1.4.4+ is required; the package manager is pinned to 1.4.4. `bunfig.toml` se
 
 `bun.lock` is the frontend dependency lockfile. Use `bun add` / `bun add -d` to change dependencies, and `bun install --frozen-lockfile` for reproducible installs. Keep the existing Vite, React, TypeScript and Vitest toolchain; the migration changes the package manager and runtime.
 
-Vercel uses `bunVersion: "1.4.x"`. Its initial project Install Command is `bunx --bun bun@1.4.4 install --frozen-lockfile` so configuration compilation can bootstrap from older build images without changing the lockfile.
+Vercel uses `bunVersion: "1.4.x"` and Install Command `bunx --bun bun@1.4.4 install --frozen-lockfile` to install with the pinned Bun release without changing the lockfile.
 
 ## Email delivery
 
@@ -26,7 +26,7 @@ The API requires valid Gmail configuration at startup. Configure and test your s
 
 ## Production build and offline testing
 
-For the two-project Vercel deployment, follow the [production guide](https://github.com/ardalepa-hyposelenia/streaxie-go/blob/main/docs/DEPLOYMENT.md). Configure `BACKEND_ORIGIN` and private `PROXY_SHARED_SECRET` for middleware, and public `VITE_TURNSTILE_SITE_KEY` for browser challenges. See `.env.example`. Vercel builds require the site key; never prefix private secrets with `VITE_`. Local development can omit Turnstile keys.
+For the two-project Vercel deployment, follow the [production guide](https://github.com/ardalepa-hyposelenia/streaxie-go/blob/main/docs/DEPLOYMENT.md). Configure private `PROXY_SHARED_SECRET` for middleware, and public `VITE_TURNSTILE_SITE_KEY` for browser challenges. The stable backend origin is declared in `vercel.json` rewrites. See `.env.example`. Vercel builds require the site key; never prefix private secrets with `VITE_`. Local development can omit Turnstile keys.
 
 Run `bun run build`. From `backend`, set `WEB_DIST=../frontend/dist`, set `WEB_ORIGIN` to the actual site origin, then run the API. In production set `APP_ENV=production` and use an HTTPS origin; refresh cookies are Secure. Terminate HTTPS at the deployment's reverse proxy.
 
